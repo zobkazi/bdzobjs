@@ -16,10 +16,17 @@ datasource db {
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
+  phone     String?
+  address   String?
+  avatar    String?
+  status    String?
   email     String   @unique
   password  String
-  posts     Post[]
+  posts     Post[] 
   createdAt DateTime @default(now())
+
+  UserSession UserSession[]
+  
 }
 
 model Post {
@@ -32,4 +39,40 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@map("posts")
+  PostTag PostTag[]
 }
+
+model Tag {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("tags")
+  PostTag PostTag[]
+}
+
+model PostTag {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  postId String @db.ObjectId
+  tagId  String @db.ObjectId
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, tagId])
+  @@map("post_tags")
+}
+
+model UserSession {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  refreshToken String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("user_sessions")
+}
+
+

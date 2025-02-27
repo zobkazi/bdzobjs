@@ -1,7 +1,15 @@
 <template>
   <div>
-    <h1 class="text-6xl font-bold text-blue-500">Welcome to Nuxt 3</h1>
-
-    <a-button>Add</a-button>
+    <PostList />
   </div>
 </template>
+
+<script lang="ts">
+import PostList from '../components/post/PostList';
+
+export default {
+  components: {
+    PostList,
+  },
+};
+</script>

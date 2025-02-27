@@ -3,6 +3,7 @@
       <ul>
         <li><NuxtLink to="/dashboard" class="block py-2">Dashboard Home</NuxtLink></li>
         <li><NuxtLink to="/dashboard/settings" class="block py-2">Settings</NuxtLink></li>
+        <li><NuxtLink to="/dashboard/profile" class="block py-2">Profile</NuxtLink></li>
       </ul>
     </aside>
   </template>

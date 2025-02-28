@@ -119,7 +119,7 @@ const handleDelete = async () => {
       alert(response.message);
       // Optionally, redirect the user to the login page or home page after deletion
       localStorage.removeItem("token");
-      window.location.href = "/login"; // Redirect to login page
+      window.location.href = "/auth/login"; // Redirect to login page
     } catch (err) {
       error.value = "Failed to delete account.";
     }

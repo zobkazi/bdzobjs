@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import PostList from '../components/post/PostList';
+import PostList from '@/components/post/PostList.vue';
 
 export default {
   components: {

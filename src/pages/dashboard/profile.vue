@@ -35,7 +35,7 @@
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        router.push("/login");
+        router.push("/auth/login");
         return;
       }
   
@@ -46,7 +46,7 @@
       user.value = response.user;
     } catch (error) {
       notification.error({ message: "Error", description: error.message });
-      router.push("/login");
+      router.push("auth/login");
     } finally {
       loading.value = false;
     }

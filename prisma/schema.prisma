@@ -16,17 +16,24 @@ datasource db {
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  phone     String?
+  phone     String? @unique
   address   String?
   avatar    String?
-  status    String?
+  status    UserStatus? @default(ACTIVE)
   email     String   @unique
   password  String
   posts     Post[] 
+  sessions  UserSession[]
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 
-  UserSession UserSession[]
-  
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  BANNED
 }
 
 model Post {
@@ -40,7 +47,7 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("posts")
-  PostTag PostTag[]
+  PostTag   PostTag[]
 }
 
 model Tag {
@@ -49,30 +56,28 @@ model Tag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@map("tags")
-  PostTag PostTag[]
+  PostTag   PostTag[]
 }
 
 model PostTag {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  postId String @db.ObjectId
-  tagId  String @db.ObjectId
-
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  postId    String   @db.ObjectId
+  tagId     String   @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 
   @@unique([postId, tagId])
   @@map("post_tags")
 }
 
 model UserSession {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
   refreshToken String
-  expiresAt DateTime
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   @@map("user_sessions")
 }
-
-

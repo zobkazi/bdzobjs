@@ -1,0 +1,28 @@
+# Node modules and dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Prisma-related files (optional, if using migrations)
+prisma/migrations
+
+# Nuxt build artifacts
+.nuxt
+output
+dist
+.cache
+.vercel
+.vscode
+
+# OS and system files
+.DS_Store
+Thumbs.db

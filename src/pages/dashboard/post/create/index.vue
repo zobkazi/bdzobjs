@@ -10,6 +10,7 @@
           v-model="blog.title" 
           class="w-full p-2 border border-gray-300 rounded-md" 
           :class="{'border-red-500': !titleValid}"
+          placeholder="Enter blog title"
         />
         <p v-if="!titleValid" class="text-red-500 text-sm mt-1">Title must be at least 3 characters long</p>
       </div>
@@ -21,6 +22,7 @@
           v-model="blog.slug" 
           class="w-full p-2 border border-gray-300 rounded-md" 
           :class="{'border-red-500': !slugValid}"
+          placeholder="Enter blog slug"
         />
         <p v-if="!slugValid" class="text-red-500 text-sm mt-1">Slug must be at least 3 characters long</p>
       </div>
@@ -32,11 +34,11 @@
           v-model="blog.content" 
           editorStyle="height: 320px" 
           :class="{'border-red-500': !contentValid}"
+          placeholder="Enter blog content"
         />
         <p v-if="!contentValid" class="text-red-500 text-sm mt-1">Content must be at least 10 characters long</p>
       </div>
 
-    
       <!-- Published Field -->
       <div class="flex items-center gap-2">
         <Checkbox v-model="blog.published" binary />
@@ -49,26 +51,20 @@
         label="Create Blog" 
         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-md"
       />
-
-      
     </form>
     <Toast />
   </div>
-
-  
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
-import Textarea from 'primevue/textarea';
+import Editor from 'primevue/editor'; // Ensure you have the Editor component imported
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import { useToast } from 'primevue/usetoast';
 import Toast from "primevue/toast";
-
-
 
 // Router and Toast
 const router = useRouter();
@@ -140,3 +136,7 @@ const createBlog = async () => {
   }
 };
 </script>
+
+<style scoped>
+/* Add any scoped styles here */
+</style>

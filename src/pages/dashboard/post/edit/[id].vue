@@ -1,102 +1,160 @@
 <template>
-    <div class="max-w-4xl mx-auto py-6">
-      <h1 class="text-3xl font-bold mb-4">Edit Blog</h1>
-  
-      <a-form
-        layout="vertical"
-        :model="blog"
-        :rules="rules"
-        ref="formRef"
-        @finish="updateBlog"
-      >
-        <a-form-item label="Title" name="title">
-          <a-input v-model:value="blog.title" />
-        </a-form-item>
-  
-        <a-form-item label="Slug" name="slug">
-          <a-input v-model:value="blog.slug" />
-        </a-form-item>
-  
-        <a-form-item label="Content" name="content">
-          <a-textarea v-model:value="blog.content" :rows="5" />
-        </a-form-item>
-  
-        <a-form-item>
-          <a-checkbox v-model:checked="blog.published">Published</a-checkbox>
-        </a-form-item>
-  
-        <a-form-item>
-          <a-button type="primary" html-type="submit" :loading="loading">
-            Update Blog
-          </a-button>
-        </a-form-item>
-      </a-form>
-    </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import { useRoute, useRouter } from 'vue-router';
-  import { message } from 'ant-design-vue';
-  
-  const route = useRoute();
-  const router = useRouter();
-  const formRef = ref();
-  const loading = ref(false);
-  
-  const blog = ref({ id: '', title: '', slug: '', content: '', published: false });
-  
-  // ✅ Validation Rules
-  const rules = {
-    title: [{ required: true, message: 'Title is required', trigger: 'blur' }],
-    slug: [{ required: true, message: 'Slug is required', trigger: 'blur' }],
-    content: [{ required: true, message: 'Content is required', trigger: 'blur' }],
-  };
-  
-  const fetchBlog = async () => {
-    const blogId = route.params.id;
-    if (!blogId) {
-      message.error('No blog ID found');
-      return;
+  <div class="max-w-4xl mx-auto py-6">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">Edit Blog</h1>
+
+    <form @submit.prevent="updateBlog" class="space-y-4 bg-white p-6 shadow-md rounded-lg">
+      <!-- Title Field -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Title</label>
+        <InputText 
+          v-model="blog.title" 
+          class="w-full p-2 border border-gray-300 rounded-md" 
+          :class="{'border-red-500': !titleValid}"
+          placeholder="Enter blog title"
+        />
+        <p v-if="!titleValid" class="text-red-500 text-sm mt-1">Title must be at least 3 characters long</p>
+      </div>
+
+      <!-- Slug Field -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Slug</label>
+        <InputText 
+          v-model="blog.slug" 
+          class="w-full p-2 border border-gray-300 rounded-md" 
+          :class="{'border-red-500': !slugValid}"
+          placeholder="Enter blog slug"
+        />
+        <p v-if="!slugValid" class="text-red-500 text-sm mt-1">Slug must be at least 3 characters long</p>
+      </div>
+
+      <!-- Content Field -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">Content</label>
+        <Editor 
+          v-model="blog.content" 
+          editorStyle="height: 320px" 
+          :class="{'border-red-500': !contentValid}"
+          placeholder="Enter blog content"
+        />
+        <p v-if="!contentValid" class="text-red-500 text-sm mt-1">Content must be at least 10 characters long</p>
+      </div>
+
+      <!-- Published Field -->
+      <div class="flex items-center gap-2">
+        <Checkbox v-model="blog.published" binary />
+        <label class="text-gray-700">Published</label>
+      </div>
+
+      <!-- Submit Button -->
+      <Button 
+        type="submit" 
+        label="Update Blog" 
+        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-md"
+      />
+    </form>
+    <Toast />
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import InputText from 'primevue/inputtext';
+import Editor from 'primevue/editor'; // Ensure you have the Editor component imported
+import Checkbox from 'primevue/checkbox';
+import Button from 'primevue/button';
+import { useToast } from 'primevue/usetoast';
+import Toast from "primevue/toast";
+
+// Router and Toast
+const router = useRouter();
+const toast = useToast();
+
+// Get token from localStorage only in the client-side
+const token = ref(null);
+
+if (typeof window !== 'undefined') {
+  token.value = localStorage.getItem("token");
+}
+
+const blog = ref({
+  id: '',
+  title: '',
+  slug: '',
+  content: '',
+  published: false,
+});
+
+const titleValid = ref(true);
+const slugValid = ref(true);
+const contentValid = ref(true);
+
+// Fetch blog data by ID
+const fetchBlog = async () => {
+  const blogId = router.currentRoute.value.params.id;
+  if (!blogId) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'No blog ID found', life: 3000 });
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/post/get/${blogId}`);
+    const data = await response.json();
+
+    if (data.success) {
+      blog.value = data.post;
+    } else {
+      toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch blog: ' + data.error, life: 3000 });
     }
-  
-    try {
-      const response = await fetch(`/api/post/get/${blogId}`);
-      const data = await response.json();
-  
-      if (data.success) {
-        blog.value = data.post;
-      } else {
-        message.error('Failed to fetch blog: ' + data.error);
-      }
-    } catch (error) {
-      message.error('Error fetching blog: ' + error);
+  } catch (error) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Error fetching blog: ' + error, life: 3000 });
+  }
+};
+
+// Validate form fields
+const validateForm = () => {
+  titleValid.value = blog.value.title.length >= 3;
+  slugValid.value = blog.value.slug.length >= 3;
+  contentValid.value = blog.value.content.length >= 10;
+  return titleValid.value && slugValid.value && contentValid.value;
+};
+
+// Handle form submission
+const updateBlog = async () => {
+  if (!validateForm()) return;
+
+  if (!token.value) {
+    toast.add({ severity: 'error', summary: 'Unauthorized', detail: 'Please log in to update a post.', life: 3000 });
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/post/edit/${blog.value.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token.value}`,
+      },
+      body: JSON.stringify(blog.value),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.add({ severity: 'success', summary: 'Success', detail: 'Blog updated successfully!', life: 3000 });
+      router.push('/dashboard/post');
+    } else {
+      toast.add({ severity: 'error', summary: 'Error', detail: data.error || 'Failed to update blog', life: 3000 });
     }
-  };
-  
-  const updateBlog = async () => {
-    try {
-      loading.value = true;
-      const response = await fetch(`/api/post/update/${blog.value.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(blog.value),
-      });
-  
-      const data = await response.json();
-      if (data.success) {
-        message.success('Blog updated successfully!');
-        router.push('/dashboard/blog');
-      } else {
-        message.error('Failed to update blog: ' + data.error);
-      }
-    } catch (error) {
-      message.error('Error updating blog: ' + error);
-    } finally {
-      loading.value = false;
-    }
-  };
-  
-  onMounted(fetchBlog);
-  </script>
-  
+  } catch (error) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Network error while updating blog', life: 3000 });
+  }
+};
+
+// Fetch blog data when the component is mounted
+onMounted(fetchBlog);
+</script>
+
+<style scoped>
+/* Add any scoped styles here */
+</style>

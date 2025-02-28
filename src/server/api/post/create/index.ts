@@ -46,8 +46,8 @@ export default defineEventHandler(async (event) => {
     }
 
     // Check if post already exists
-    const existingPost = await prisma.post.findUnique({
-      where: { slug: validatedData.slug },
+    const existingPost = await prisma.post.findMany({
+      where: { slug: validatedData.slug, content: validatedData.content },
     })
 
     if (existingPost) {

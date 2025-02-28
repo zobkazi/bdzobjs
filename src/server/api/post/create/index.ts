@@ -14,8 +14,14 @@ const postSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   try {
-    const body = await readBody(event)
-    const validatedData = postSchema.parse(body)
+    // const body = await readBody(event)
+    // const validatedData = postSchema.parse(body)
+
+    console.log("Request received");
+    const body = await readBody(event);
+    console.log("Body:", body);
+    const validatedData = postSchema.parse(body);
+    console.log("Validated Data:", validatedData);
 
     // Extract and verify JWT from Authorization header
     const authHeader = getHeader(event, "authorization")

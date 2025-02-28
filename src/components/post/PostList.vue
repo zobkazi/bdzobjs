@@ -1,161 +1,68 @@
-<template>
-  <div class="max-w-4xl mx-auto py-6">
-    <h1 class="text-3xl font-bold mb-4">Posts</h1>
-    <Button label="Refresh Posts" icon="pi pi-refresh" @click="fetchPosts" class="mb-4" />
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import axios from 'axios';
+import Button from 'primevue/button';
+import Card from 'primevue/card';
 
-    <div v-if="posts.length" class="mt-4 grid grid-cols-1 gap-4">
-      <template v-for="post in posts" :key="post.id">
-        <Card>
-          <CardHeader>
-            <router-link :to="`/post/${post.slug}`" class="text-xl font-semibold">
-    ```typescript
-// Add a loading state to handle asynchronous data fetching
-const isLoading = ref(false);
+const route = useRoute();
+const router = useRouter();
 
-// Update the fetchPosts function to handle loading state
+const posts = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const nextPage = ref(null);
+const prevPage = ref(null);
+
 const fetchPosts = async (page = 1) => {
-  isLoading.value = true;
   try {
-    const response = await fetch(`/api/post/getAll?page=${page}&limit=${limit}`);
-    const data = await response.json();
-
+    const { data } = await axios.get(`/api/post/getAll?page=${page}&limit=5`);
     if (data.success) {
       posts.value = data.posts;
-      pagination.value = {
-        currentPage: data.currentPage,
-        totalPages: data.totalPages,
-        totalPosts: data.totalPosts,
-      };
-    } else {
-      console.error("Failed to fetch posts:", data.error);
+      currentPage.value = data.currentPage;
+      totalPages.value = data.totalPages;
+      nextPage.value = data.nextPage;
+      prevPage.value = data.prevPage;
     }
   } catch (error) {
-    console.error("Error fetching posts:", error);
-  } finally {
-    isLoading.value = false;
+    console.error('Error fetching posts:', error);
   }
 };
 
-// Add a loading indicator to the template
-<template>
-  <div class="max-w-4xl mx-auto py-6">
-    <h1 class="text-3xl font-bold mb-4">Posts</h1>
-    <Button label="Refresh Posts" icon="pi pi-refresh" @click="fetchPosts" class="mb-4" />
-
-    <div v-if="isLoading" class="text-center text-gray-500 mt-6">
-      Loading posts...
-    </div>
-
-    <div v-else-if="posts.length" class="mt-4 grid grid-cols-1 gap-4">
-      <template v-for="post in posts" :key="post.id">
-        <Card>
-          <CardHeader>
-            <router-link :to="`/post/${post.slug}`" class="text-xl font-semibold">
-              {{ post.title }}
-            </router-link>
-          </CardHeader>
-          <CardContent>
-            <p>{{ post.excerpt || post.content || "No description available." }}</p>
-          </CardContent>
-        </Card>
-      </template>
-    </div>
-
-    <div v-else class="text-center text-gray-500 mt-6">
-      No posts available.
-    </div>
-
-    <div class="mt-6">
-      <Pagination
-        v-if="pagination.totalPages > 1"
-        :current="pagination.currentPage"
-        :total="pagination.totalPosts"
-        :page-size="limit"
-        @change="handlePageChange"
-      />
-    </div>
-  </div>
-</template>
-```          {{ post.title }}
-            </router-link>
-          </CardHeader>
-          <CardContent>
-            <p>{{ post.excerpt || post.content || "No description available." }}</p>
-          </CardContent>
-        </Card>
-      </template>
-    </div>
-
-    <div v-else class="text-center text-gray-500 mt-6">
-      No posts available.
-    </div>
-
-    <div class="mt-6">
-      <Pagination
-        v-if="pagination.totalPages > 1"
-        :current="pagination.currentPage"
-        :total="pagination.totalPosts"
-        :page-size="limit"
-        @change="handlePageChange"
-      />
-    </div>
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-
-interface Post {
-  id: string;
-  title: string;
-  slug: string;
-  content: string | null;
-  excerpt: string | null; // Add this line
-  published: boolean; // Add this line if you need it
-  authorId: string; // Add this line if you need it
-  createdAt: string;
-  updatedAt: string;
-}
-
-
-const posts = ref<Post[]>([]);
-const pagination = ref({
-  currentPage: 1,
-  totalPages: 0,
-  totalPosts: 0,
-});
-const limit = 10;
-
-const fetchPosts = async (page = 1) => {
-  try {
-    const response = await fetch(`/api/post/getAll?page=${page}&limit=${limit}`);
-    const data = await response.json();
-
-    if (data.success) {
-      posts.value = data.posts; // ✅ Correctly update posts
-      console.log("Fetched posts:", posts.value); // Add this line
-      pagination.value = {
-        currentPage: data.currentPage,
-        totalPages: data.totalPages,
-        totalPosts: data.totalPosts,
-      };
-    } else {
-      console.error("Failed to fetch posts:", data.error);
-    }
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-  }
-};
-// Fetch posts on mount
 onMounted(() => {
-  fetchPosts();
+  fetchPosts(route.query.page ? parseInt(route.query.page) : 1);
 });
 
-const handlePageChange = (page: number) => {
+const changePage = (page) => {
+  router.push({ query: { page } });
   fetchPosts(page);
 };
 </script>
 
-<style scoped>
-/* Add any additional styles here if needed */
-</style>
+<template>
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">Blog Posts</h1>
+    
+    <div v-if="posts.length" class="space-y-4">
+      <Card v-for="post in posts" :key="post.id" class="p-4 shadow-lg rounded-xl">
+        <template #title>
+       
+          <NuxtLink :to="{name: 'post-slug', params: { slug: post.slug }}" class="text-lg font-bold text-blu">
+            {{ post.title }}
+          </NuxtLink>
+
+          
+        </template>
+       
+      </Card>
+    </div>
+    
+    <div v-else class="text-center text-gray-500">No posts found.</div>
+    
+    <div class="flex justify-between mt-6">
+      <Button v-if="prevPage" @click="changePage(currentPage - 1)" class="bg-blue-500 text-white px-4 py-2 rounded">Previous</Button>
+      <span class="px-4 py-2">Page {{ currentPage }} of {{ totalPages }}</span>
+      <Button v-if="nextPage" @click="changePage(currentPage + 1)" class="bg-blue-500 text-white px-4 py-2 rounded">Next</Button>
+    </div>
+  </div>
+</template>

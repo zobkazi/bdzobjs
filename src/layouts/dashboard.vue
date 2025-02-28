@@ -13,5 +13,7 @@
   <script setup>
   import Sidebar from "@/components/dashboard/Sidebar.vue";
 
+//Apply Middleware to All Dashboard Pages
+  definePageMeta({ middleware: "auth" });
   </script>
   

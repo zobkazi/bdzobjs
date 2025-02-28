@@ -28,15 +28,15 @@
       <!-- Content Field -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">Content</label>
-        <Textarea 
+        <Editor 
           v-model="blog.content" 
-          rows="5" 
-          class="w-full p-2 border border-gray-300 rounded-md" 
+          editorStyle="height: 320px" 
           :class="{'border-red-500': !contentValid}"
         />
         <p v-if="!contentValid" class="text-red-500 text-sm mt-1">Content must be at least 10 characters long</p>
       </div>
 
+    
       <!-- Published Field -->
       <div class="flex items-center gap-2">
         <Checkbox v-model="blog.published" binary />
@@ -49,9 +49,13 @@
         label="Create Blog" 
         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-md"
       />
+
+      
     </form>
     <Toast />
   </div>
+
+  
 </template>
 
 <script setup>

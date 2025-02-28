@@ -302,9 +302,9 @@ const items = ref([
         to: '/support/contact'
       },
       {
-        label: 'FAQ',
+        label: 'Profile',
         icon: 'pi pi-question',
-        to: '/support/faq'
+        to: '/dashboard/profile'
       }
     ]
   },
@@ -318,6 +318,8 @@ const items = ref([
     }
   }
 ]);
+
+
 </script>
 
 <style scoped>

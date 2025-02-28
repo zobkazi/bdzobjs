@@ -50,6 +50,7 @@
         class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded-md"
       />
     </form>
+    <Toast />
   </div>
 </template>
 
@@ -61,6 +62,9 @@ import Textarea from 'primevue/textarea';
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import { useToast } from 'primevue/usetoast';
+import Toast from "primevue/toast";
+
+
 
 // Router and Toast
 const router = useRouter();
@@ -123,7 +127,7 @@ const createBlog = async () => {
 
     if (response.ok) {
       toast.add({ severity: 'success', summary: 'Success', detail: 'Blog created successfully!', life: 3000 });
-      router.push('/dashboard/blog');
+      router.push('/dashboard/post');
     } else {
       toast.add({ severity: 'error', summary: 'Error', detail: data.error || 'Failed to create blog', life: 3000 });
     }

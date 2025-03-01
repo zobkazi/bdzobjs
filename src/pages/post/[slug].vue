@@ -1,18 +1,36 @@
+
 <template>
-  <div class="max-w-4xl mx-auto py-6">
+  <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div v-if="post">
-      <h1 class="text-4xl font-bold mb-4">{{ post.title }}</h1>
+      <!-- Title and Published Date -->
+      <h1 class="text-4xl font-bold text-center sm:text-left mb-4">{{ post.title }}</h1>
+    
       <p class="text-gray-600 mb-4">Published on {{ new Date(post.createdAt).toLocaleDateString() }}</p>
-      <div class="prose" v-html="post.content"></div> <!-- Use v-html to render HTML content -->
-      <router-link to="/" class="mt-6 text-blue-500">Back to Posts</router-link>
+
+      <hr  class="w-2 bg-black"/>
+
+      <Image :src="post.ThumbnailUrl" alt="Thumbnail Image" />
+      <!-- Content (using prose for rich text formatting) -->
+      <div class="">
+        <p class="prose" v-html="post.content" />
+        
+      </div>
+      <!-- Back Link -->
+      <router-link to="/" class="mt-6 inline-block text-blue-500 hover:underline">
+        Back to Posts
+      </router-link>
     </div>
-    <div v-else class="text-center">Loading...</div>
+    <div v-else class="text-center text-gray-500">Loading...</div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+
+import Divider from 'primevue/divider';
+import Image from 'primevue/image'; 
 
 
 const post = ref(null);
@@ -32,11 +50,26 @@ const fetchPost = async () => {
   }
 };
 
+
+
+// seo metadata
+const title = ref(post.value ? post.value.slug : 'Loading...');
+
+
+const updateSeoMeta = () => {
+  if (post.value) {
+    title.value = post.value.title; // Set the post title when data is available
+  
+    useSeoMeta({
+      title: title.value
+    });
+  }
+};
+
 onMounted(() => {
   fetchPost();
-});
-</script>
+  updateSeoMeta();
 
-<style scoped>
-/* Add any scoped styles here */
-</style>
+});
+
+</script>

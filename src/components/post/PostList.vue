@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6">
-    <h1 class="text-2xl font-bold text-center mb-6">Blog Posts</h1>
+    <h1 class="text-2xl font-bold text-center mb-6">Latest Posts</h1>
     
     <div v-if="posts.length" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <Card v-for="post in posts" :key="post.id" class="shadow-lg rounded-xl">

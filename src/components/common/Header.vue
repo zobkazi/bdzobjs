@@ -5,6 +5,7 @@
       <nav>
         <ul class="flex space-x-4">
           <li><NuxtLink to="/" class="hover:text-gray-300">Home</NuxtLink></li>
+          <li><NuxtLink to="/post" class="hover:text-gray-300">Blogs </NuxtLink></li>
           <li><NuxtLink to="/about" class="hover:text-gray-300">About</NuxtLink></li>
           <li><NuxtLink to="/contact" class="hover:text-gray-300">Contact</NuxtLink></li>
           <li><NuxtLink to="/auth/login" class="hover:text-gray-300">Login</NuxtLink></li>

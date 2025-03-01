@@ -19,6 +19,7 @@
     </div>
     <div v-else class="text-center text-gray-500">Loading...</div>
   </div>
+  <ScrollTop />
 </template>
 
 <script setup>
@@ -27,6 +28,8 @@ import { useRoute } from 'vue-router';
 import { useSeoMeta } from '@unhead/vue';
 import DOMPurify from 'dompurify';
 import Image from 'primevue/image';
+
+import ScrollTop from 'primevue/scrolltop';
 
 
 

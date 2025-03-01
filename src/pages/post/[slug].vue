@@ -1,20 +1,17 @@
-
 <template>
   <div class="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
     <div v-if="post">
       <!-- Title and Published Date -->
       <h1 class="text-4xl font-bold text-center sm:text-left mb-4">{{ post.title }}</h1>
-    
-      <p class="text-gray-600 mb-4">Published on {{ new Date(post.createdAt).toLocaleDateString() }}</p>
+      <p class="text-gray-600 mb-4">Published on {{ formattedDate }}</p>
 
-      <hr  class="w-2 bg-black"/>
+      <!-- Thumbnail Image -->
+      <Image v-if="post.ThumbnailUrl" :src="post.ThumbnailUrl" alt="Thumbnail Image" preview />
 
-      <Image :src="post.ThumbnailUrl" alt="Thumbnail Image" />
-      <!-- Content (using prose for rich text formatting) -->
-      <div class="">
-        <p class="prose" v-html="post.content" />
-        
-      </div>
+      <!-- Content -->
+      
+      <p class="prose prose-stone max-w-none mt-6"  v-html="sanitizedContent"></p>
+
       <!-- Back Link -->
       <router-link to="/" class="mt-6 inline-block text-blue-500 hover:underline">
         Back to Posts
@@ -24,18 +21,20 @@
   </div>
 </template>
 
-
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useSeoMeta } from '@unhead/vue';
+import DOMPurify from 'dompurify';
+import Image from 'primevue/image';
 
-import Divider from 'primevue/divider';
-import Image from 'primevue/image'; 
 
 
+// State
 const post = ref(null);
 const route = useRoute();
 
+// Fetch Post
 const fetchPost = async () => {
   try {
     const response = await fetch(`/api/post/getBySlug?slug=${route.params.slug}`);
@@ -50,26 +49,13 @@ const fetchPost = async () => {
   }
 };
 
+// Computed Properties
+const sanitizedContent = computed(() => post.value ? DOMPurify.sanitize(post.value.content) : '');
+const formattedDate = computed(() => post.value ? new Date(post.value.createdAt).toLocaleDateString() : '');
 
+// SEO Metadata
+const title = computed(() => post.value ? post.value.title : 'Loading...');
+useSeoMeta({ title });
 
-// seo metadata
-const title = ref(post.value ? post.value.slug : 'Loading...');
-
-
-const updateSeoMeta = () => {
-  if (post.value) {
-    title.value = post.value.title; // Set the post title when data is available
-  
-    useSeoMeta({
-      title: title.value
-    });
-  }
-};
-
-onMounted(() => {
-  fetchPost();
-  updateSeoMeta();
-
-});
-
+onMounted(fetchPost);
 </script>

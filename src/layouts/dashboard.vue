@@ -12,7 +12,7 @@
   
   <script setup>
   import Sidebar from "@/components/dashboard/Sidebar.vue";
-
+    import 'primeicons/primeicons.css'
 //Apply Middleware to All Dashboard Pages
   definePageMeta({ middleware: "auth" });
   </script>

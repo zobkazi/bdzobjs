@@ -30,12 +30,18 @@
       <!-- Content Field -->
       <div>
         <label class="block text-gray-700 font-medium mb-1">Content</label>
-        <Editor 
-          v-model="blog.content" 
-          editorStyle="height: 320px" 
-          :class="{'border-red-500': !contentValid}"
-          placeholder="Enter blog content"
-        />
+
+        <Editor
+        v-model="blog.content" 
+       api-key="process.env.VUE_APP_TINYMCE_API_KEY"
+      :init="{
+        toolbar_mode: 'sliding',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+      }"
+      initial-value="Welcome to TinyMCE!"
+    />
+        
         <p v-if="!contentValid" class="text-red-500 text-sm mt-1">Content must be at least 10 characters long</p>
       </div>
 
@@ -60,7 +66,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
-import Editor from 'primevue/editor'; // Ensure you have the Editor component imported
+import Editor from '@tinymce/tinymce-vue'
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import { useToast } from 'primevue/usetoast';

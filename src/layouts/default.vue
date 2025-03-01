@@ -9,5 +9,7 @@
   
   <script setup>
   import Header from "@/components/common/Header.vue";
+  import 'primeicons/primeicons.css'
+
   </script>
   

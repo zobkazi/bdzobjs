@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: my_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: mydatabase
+    volumes:
+      - mongodb_data:/data/db
+
+  prisma:
+    image: node:18
+    container_name: prisma_mongodb
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+    command: >
+      sh -c "npm install && npx prisma generate && npm run dev"
+    environment:
+      DATABASE_URL: "mongodb://admin:secret@mongodb:27017/mydatabase?authSource=admin"
+
+volumes:
+  mongodb_data:

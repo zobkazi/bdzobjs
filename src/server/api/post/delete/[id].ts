@@ -1,15 +1,15 @@
-import { defineEventHandler, getQuery } from 'h3';
+import { defineEventHandler, H3Event } from 'h3';
 import prisma from '~/server/utils/prisma';
 
-export default defineEventHandler(async (event) => {
+export default defineEventHandler(async (event: H3Event) => {
   try {
-    const query = getQuery(event);
-    const { id } = query;
+    const { id } = event.context.params || {};  // Safely destructure `id` from `params`
 
     if (!id) {
       throw new Error('Post ID is required');
     }
 
+    // Delete the post with the provided ID
     await prisma.post.delete({
       where: { id: String(id) },
     });
@@ -19,7 +19,6 @@ export default defineEventHandler(async (event) => {
     if (error instanceof Error) {
       return { success: false, error: error.message };
     }
-    // Handle non-Error objects
     return { success: false, error: 'An unknown error occurred' };
   }
 });

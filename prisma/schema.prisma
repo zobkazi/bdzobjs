@@ -1,83 +1,85 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
-
+        
+// User Model (Owner/Admin)
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  phone     String? @unique
-  address   String?
-  avatar    String?
-  status    UserStatus? @default(ACTIVE)
-  email     String   @unique
-  password  String
-  posts     Post[] 
-  sessions  UserSession[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  deletedAt DateTime?
-
+  id          String        @id @default(uuid())
+  name        String
+  email       String        @unique
+  password    String
+  phone       String?       @unique
+  bio         String?
+  avatar      String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  BANNED
-}
-
+// Blog Post Model
 model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
-  slug      String   @unique
-  content   String
-  published Boolean  @default(false)
-  authorId  String   @db.ObjectId
-  author    User     @relation(fields: [authorId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  @@map("posts")
-  PostTag   PostTag[]
+  id           String    @id @default(uuid())
+  title        String
+  slug         String    @unique
+  ThumbnailUrl String?
+  content      String
+  published    Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
-model Tag {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+// Project Portfolio Model
+model Project {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  url         String?
+  image       String?
+  github      String?
+  techStack   String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Contact Form Submissions Model
+model ContactMessage {
+  id        String   @id @default(uuid())
   name      String
+  email     String
+  subject   String?
+  message   String
+  replied   Boolean  @default(false)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  @@map("tags")
-  PostTag   PostTag[]
 }
 
-model PostTag {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  postId    String   @db.ObjectId
-  tagId     String   @db.ObjectId
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  tag       Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+// Social Media Links Model
+model SocialLink {
+  id       String @id @default(uuid())
+  platform String
+  url      String
   createdAt DateTime @default(now())
-
-  @@unique([postId, tagId])
-  @@map("post_tags")
 }
 
+// Tag Model for Blog Posts
+model Tag {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+
+// User Session Model (For Authentication)
 model UserSession {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String   @db.ObjectId
+  id           String   @id @default(uuid())
+  userId       String
   refreshToken String
   expiresAt    DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  @@map("user_sessions")
 }

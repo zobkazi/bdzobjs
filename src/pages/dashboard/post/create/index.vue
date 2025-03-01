@@ -11,6 +11,7 @@
           class="w-full p-2 border border-gray-300 rounded-md" 
           :class="{'border-red-500': !titleValid}"
           placeholder="Enter blog title"
+          @input="generateSlug"
         />
         <p v-if="!titleValid" class="text-red-500 text-sm mt-1">Title must be at least 3 characters long</p>
       </div>
@@ -19,12 +20,22 @@
       <div>
         <label class="block text-gray-700 font-medium mb-1">Slug</label>
         <InputText 
-          v-model="blog.slug" 
+          :value="blog.slug" 
           class="w-full p-2 border border-gray-300 rounded-md" 
-          :class="{'border-red-500': !slugValid}"
-          placeholder="Enter blog slug"
+          readonly
+          placeholder="Slug will be auto-generated"
         />
         <p v-if="!slugValid" class="text-red-500 text-sm mt-1">Slug must be at least 3 characters long</p>
+      </div>
+
+      <!-- ThumbnailUrl Field -->
+      <div>
+        <label class="block text-gray-700 font-medium mb-1">ThumbnailUrl</label>
+        <InputText 
+          v-model="blog.ThumbnailUrl" 
+          class="w-full p-2 border border-gray-300 rounded-md"
+          placeholder="Enter blog thumbnail URL"
+        />
       </div>
 
       <!-- Content Field -->
@@ -56,11 +67,12 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import InputText from 'primevue/inputtext';
-import Editor from 'primevue/editor'; // Ensure you have the Editor component imported
+import Editor from 'primevue/editor'; 
 import Checkbox from 'primevue/checkbox';
 import Button from 'primevue/button';
 import { useToast } from 'primevue/usetoast';
@@ -80,6 +92,7 @@ if (typeof window !== 'undefined') {
 const blog = ref({
   title: '',
   slug: '',
+  ThumbnailUrl: '',
   content: '',
   published: false,
 });
@@ -102,6 +115,18 @@ const validateForm = () => {
   contentValid.value = blog.value.content.length >= 10;
   return titleValid.value && slugValid.value && contentValid.value;
 };
+
+// Function to generate slug from title
+const generateSlug = () => {
+  if (blog.value.title.length >= 3) {
+    blog.value.slug = blog.value.title
+      .toLowerCase()
+      .replace(/[^\w\s\-\u0980-\u09FF]/g, '') 
+      .replace(/\s+/g, '-')                   
+      .trim();                           
+  }
+};
+
 
 // Handle form submission
 const createBlog = async () => {
@@ -136,7 +161,3 @@ const createBlog = async () => {
   }
 };
 </script>
-
-<style scoped>
-/* Add any scoped styles here */
-</style>

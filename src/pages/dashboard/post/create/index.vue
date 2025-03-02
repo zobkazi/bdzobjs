@@ -167,4 +167,7 @@ const createBlog = async () => {
     toast.add({ severity: 'error', summary: 'Error', detail: 'Network error while creating blog', life: 3000 });
   }
 };
+
+definePageMeta({ layout: "dashboard", middleware: "auth", });
+
 </script>

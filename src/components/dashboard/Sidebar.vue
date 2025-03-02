@@ -105,7 +105,7 @@ const items = ref([
   {
     label: 'Analytics',
     icon: 'pi pi-chart-bar',
-    to: '/analytics'
+    to: '/dashboard/analytics'
   },
   {
     separator: true
@@ -129,27 +129,27 @@ const items = ref([
         label: 'Search Files',
         icon: 'pi pi-search',
         shortcut: '⌘+S',
-        to: '/documents/search'
+        to: '/dashboard/post/search'
       },
       {
         label: 'Recent Files',
         icon: 'pi pi-clock',
-        to: '/documents/recent'
+        to: '/dashboard/post/recent'
       },
       {
         label: 'Shared With Me',
         icon: 'pi pi-share-alt',
-        to: '/documents/shared'
+        to: '/dashboard/post/shared'
       },
       {
         label: 'Favorites',
         icon: 'pi pi-star',
-        to: '/documents/favorites'
+        to: '/dashboard/post/favorites'
       },
       {
         label: 'Trash',
         icon: 'pi pi-trash',
-        to: '/documents/trash'
+        to: '/dashboard/post/trash'
       }
     ]
   },
@@ -160,87 +160,34 @@ const items = ref([
       {
         label: 'All Projects',
         icon: 'pi pi-list',
-        to: '/projects'
+        to: '/dashboard/projects'
       },
       {
         label: 'Create Project',
         icon: 'pi pi-plus',
-        to: '/projects/new'
+        to: '/dashboard/projects/create'
       },
       {
         label: 'My Tasks',
         icon: 'pi pi-check-square',
         badge: '5',
-        to: '/projects/tasks'
+        to: '/dashboard/projects/tasks'
       },
       {
         label: 'Calendar',
         icon: 'pi pi-calendar',
-        to: '/projects/calendar'
+        to: '/dashboard/projects/calendar'
       },
       {
         label: 'Team',
         icon: 'pi pi-users',
-        to: '/projects/team'
+        to: '/dashboard/projects/team'
       }
     ]
   },
-  {
-    label: 'Communications',
-    icon: 'pi pi-comments',
-    items: [
-      {
-        label: 'Inbox',
-        icon: 'pi pi-inbox',
-        badge: '12',
-        to: '/messages/inbox'
-      },
-      {
-        label: 'Chat',
-        icon: 'pi pi-comment',
-        badge: '3',
-        to: '/messages/chat'
-      },
-      {
-        label: 'Video Calls',
-        icon: 'pi pi-video',
-        to: '/messages/video'
-      },
-      {
-        label: 'Contacts',
-        icon: 'pi pi-user-plus',
-        to: '/messages/contacts'
-      }
-    ]
-  },
+
   {
     separator: true
-  },
-  {
-    label: 'Finance',
-    icon: 'pi pi-dollar',
-    items: [
-      {
-        label: 'Invoices',
-        icon: 'pi pi-file-pdf',
-        to: '/finance/invoices'
-      },
-      {
-        label: 'Payments',
-        icon: 'pi pi-credit-card',
-        to: '/finance/payments'
-      },
-      {
-        label: 'Reports',
-        icon: 'pi pi-chart-line',
-        to: '/finance/reports'
-      },
-      {
-        label: 'Budget',
-        icon: 'pi pi-wallet',
-        to: '/finance/budget'
-      }
-    ]
   },
   {
     label: 'Settings',

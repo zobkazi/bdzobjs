@@ -16,6 +16,7 @@
     "ant-design-vue": "^4.2.6",
     "axios": "^1.8.1",
     "bcryptjs": "^3.0.2",
+    "chart.js": "^4.4.8",
     "dompurify": "^3.2.4",
     "h3": "^1.15.1",
     "jsonwebtoken": "^9.0.2",

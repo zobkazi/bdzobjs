@@ -16,10 +16,13 @@
         <img src="https://cwiekqazbhwtjgasjdjd.supabase.co/storage/v1/object/sign/user2/Screenshot%20From%202025-02-24%2013-21-35.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ1c2VyMi9TY3JlZW5zaG90IEZyb20gMjAyNS0wMi0yNCAxMy0yMS0zNS5wbmciLCJpYXQiOjE3NDA4MzY1NDQsImV4cCI6MTc3MjM3MjU0NH0.-sfNYcYceePyTetWxrLIgXkZzubJ3-0QkSMY0xEbFTM" alt="Hero Image" class="max-w-sm md:max-w-lg rounded-lg shadow-lg" />
       </div>
     </section>
+
+
   </template>
   
   <script setup>
   import  Button  from 'primevue/button';
+
   </script>
   
   <style scoped>

@@ -6,7 +6,6 @@
 
     <DataTable :value="blogs" class="mt-6 shadow-md rounded-lg" :responsiveLayout="'scroll'">
       <Column field="title" header="Title"></Column>
-      <Column field="slug" header="Slug"></Column>
       <Column field="published" header="Published">
         <template #body="{ data }">
           <span :class="data.published ? 'text-green-600' : 'text-red-600'">
@@ -101,6 +100,3 @@ definePageMeta({
 });
 </script>
 
-<style scoped>
-/* Add any additional scoped styles here for responsiveness */
-</style>

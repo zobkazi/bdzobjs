@@ -107,6 +107,8 @@
   onMounted(() => {
     fetchProjects();
   });
+
+  definePageMeta({ layout: "dashboard", middleware: "auth", });
   </script>
   
   <style scoped>

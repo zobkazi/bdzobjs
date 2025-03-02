@@ -182,6 +182,8 @@ const submitForm = async () => {
     toast.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while creating the project.' });
   }
 };
+
+definePageMeta({ layout: "dashboard", middleware: "auth", });
 </script>
 
 <style scoped>

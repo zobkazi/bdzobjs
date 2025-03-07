@@ -1,14 +1,14 @@
 <template>
   <div class="max-w-4xl mx-auto py-6">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800">Create New Blog</h1>
+    <h1 class="text-3xl font-bold mb-6 ">Create New Blog</h1>
 
-    <form @submit.prevent="createBlog" class="space-y-4 bg-white p-6 shadow-md rounded-lg">
+    <form @submit.prevent="createBlog" class="space-y-4  p-6 shadow-md rounded-lg">
       <!-- Title Field -->
       <div>
-        <label class="block text-gray-700 font-medium mb-1">Title</label>
+        <label class="block font-medium mb-1">Title</label>
         <InputText 
           v-model="blog.title" 
-          class="w-full p-2 border border-gray-300 rounded-md" 
+          class="w-full p-2 border  rounded-md" 
           :class="{'border-red-500': !titleValid}"
           placeholder="Enter blog title"
           @input="generateSlug"
@@ -18,7 +18,7 @@
 
       <!-- Slug Field -->
       <div>
-        <label class="block text-gray-700 font-medium mb-1">Slug</label>
+        <label class="block  font-medium mb-1">Slug</label>
         <InputText 
           :value="blog.slug" 
           class="w-full p-2 border border-gray-300 rounded-md" 
